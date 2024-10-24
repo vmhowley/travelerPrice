@@ -259,5 +259,8 @@ findCheapestFlightInRange(
   });
 
   // Reservar el vuelo encontrado
-  bookFlight(cheapestFlight, passengerDetails);
+  if (cheapestFlight.price.total <= 150.73 ){
+    console.log('Reservando el vuelo...');
+    bookFlight(cheapestFlight, passengerDetails);
+  }
 });
