@@ -19,7 +19,7 @@ async function getFilteredFlights(origin, destination, departureDate, maxPrice, 
     });
 
     let flights = response.data;
-
+    
     // Filtro por precio máximo
     flights = flights.filter(flight => parseFloat(flight.price.total) <= maxPrice);
 
@@ -29,7 +29,7 @@ async function getFilteredFlights(origin, destination, departureDate, maxPrice, 
       const durationHours = parseInt(duration.match(/\d+H/)[0].replace('H', '')); // Extraer horas de la duración
       return durationHours <= maxDuration;
     });
-
+   
     // Filtro por vuelos directos o con escalas
     if (preferDirect) {
       flights = flights.filter(flight => flight.itineraries[0].segments.length === 1);
@@ -40,7 +40,17 @@ async function getFilteredFlights(origin, destination, departureDate, maxPrice, 
       const departureTime = new Date(flight.itineraries[0].segments[0].departure.at).getHours();
       return departureTime >= departureTimeWindow.start && departureTime <= departureTimeWindow.end;
     });
-
+     console.log(`Vuelos encontrados para la fecha ${departureDate}:`);
+    flights.forEach(flight => {
+      console.log(`- Id: ${flight.id}`);
+      console.log(`- Aerolínea: ${flight.itineraries[0].segments[0].carrierCode}`);
+      console.log(`  Precio: ${flight.price.total} ${flight.price.currency}`);
+      console.log(`  Origen: ${flight.itineraries[0].segments[0].departure.iataCode}`);
+      console.log(`  Destino: ${flight.itineraries[0].segments[0].arrival.iataCode}`);
+      console.log(`  Fecha de salida: ${flight.itineraries[0].segments[0].departure.at}`);
+      console.log(`  Duración: ${flight.itineraries[0].duration}`);
+      console.log('----------------------------------------');
+    });
     // Transformar la data para mostrarla más fácilmente
     return flights.map(flight => {
       return {
@@ -67,7 +77,7 @@ async function getFilteredFlights(origin, destination, departureDate, maxPrice, 
       };
     });
   } catch (error) {
-    console.error("Error al obtener vuelos:", error.response ? error.response.data : error);
+    console.error("Error al obtener vuelos:", error.response);
   }
 }
 
@@ -187,7 +197,7 @@ async function bookFlight(flights, passengerDetails) {
       }
     });
 
-    console.log("Reserva confirmada:", response.data);
+    console.log("Reserva ", response.data.id, 'Confirmada ✔');
     getFlightOrder(response.data.id)
   } catch (error) {
     console.error("Error al reservar el vuelo:", error.response);
@@ -217,8 +227,8 @@ async function cancelFlightOrder(flightOrderId) {
 // Ejemplo de búsqueda de vuelos baratos en un rango de fechas
 const origin = 'JFK'; // Origen
 const destination = 'SDQ'; // Destino
-const startDate = '2024-10-27'; // Fecha de inicio del rango
-const endDate = '2024-11-02'; // Fecha de fin del rango
+const startDate = '2024-12-05'; // Fecha de inicio del rango
+const endDate = '2024-12-30'; // Fecha de fin del rango
 const maxPrice = 500; // Precio máximo
 const maxDuration = 10; // Duración máxima en horas
 const isDirect = true; // Preferencia por vuelos directos
@@ -253,13 +263,15 @@ findCheapestFlightInRange(
   console.log('Vuelo más barato:', {
     offerId: cheapestFlight.offerId,
     airline: cheapestFlight.airline,
+    origin: cheapestFlight.origin,
+    destination: cheapestFlight.destination,
     departureDate: cheapestFlight.departureDate,
     duration: cheapestFlight.duration,
     price: cheapestFlight.price.total
   });
 
   // Reservar el vuelo encontrado
-  if (cheapestFlight.price.total <= 150.73 ){
+  if (cheapestFlight.price.total < 500 ){
     console.log('Reservando el vuelo...');
     bookFlight(cheapestFlight, passengerDetails);
   }
