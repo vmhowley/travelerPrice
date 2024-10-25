@@ -16,8 +16,8 @@ const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 P
 
 // Detalles del pasajero
 const passengerDetails = {
-  firstName: 'Margaret Andreina',
-  lastName: 'Quezada Encarnacion',
+  firstName: 'Marasdasgaret asd',
+  lastName: 'Quezasdada asd',
   dateOfBirth: "1997-12-25",
   email: 'johndoe@gmail.com',
   phone: '+1 234 567 8901',
@@ -38,6 +38,20 @@ const amadeus = new Amadeus({
   hostname:'production'
 });
 
+app.get('/api/locations', async (req, res) =>{
+
+  try {
+
+    const response = await amadeus.referenceData.locations.get({
+      keyword: 'LON',
+      subType: 'AIRPORT,CITY',
+    }).then((response) =>{
+      res.json(response.data) 
+    });
+  }catch(error){
+    console.log(error)
+  }
+  })
 
 app.get('/api/cheapestflight', async (req, res) => {
   // const {  origin, destination, startDate, endDate, maxPrice, maxDuration, isDirect, prefHours} = req.query
