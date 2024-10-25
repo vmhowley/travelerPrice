@@ -1,21 +1,118 @@
 require('dotenv').config();
+const express = require('express');
+const app = express();
+const cors = require('cors');
 const Amadeus = require('amadeus');
+
+// Ejemplo de búsqueda de vuelos baratos en un rango de fechas
+const origin = 'SDQ'; // Origen
+const destination = 'JFK'; // Destino
+const startDate = '2024-12-05'; // Fecha de inicio del rango
+const endDate = '2024-12-06'; // Fecha de fin del rango
+const maxPrice = 500; // Precio máximo
+const maxDuration = 10; // Duración máxima en horas
+const isDirect = true; // Preferencia por vuelos directos
+const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 PM)
+
+// Detalles del pasajero
+const passengerDetails = {
+  firstName: 'Margaret Andreina',
+  lastName: 'Quezada Encarnacion',
+  dateOfBirth: "1997-12-25",
+  email: 'johndoe@gmail.com',
+  phone: '+1 234 567 8901',
+  birthPlace: 'DO',
+  issuanceCountry: 'US',
+  nationality: 'DO',
+  documentNumber: '5445465665446',
+  expiryDate: '2025-12-31',
+  issuanceDate: '2020-01-01'
+};
+
+app.use(cors());
 
 // Configura el cliente de Amadeus con tus credenciales
 const amadeus = new Amadeus({
   clientId: process.env.AMADEUS_CLIENT_ID,
-  clientSecret: process.env.AMADEUS_CLIENT_SECRET
+  clientSecret: process.env.AMADEUS_CLIENT_SECRET,
+  hostname:'production'
 });
+
+
+app.get('/api/cheapestflight', async (req, res) => {
+  // const {  origin, destination, startDate, endDate, maxPrice, maxDuration, isDirect, prefHours} = req.query
+  await findCheapestFlightInRange(
+    origin,
+    destination,
+    startDate,
+    endDate,
+    maxPrice,
+    maxDuration,
+    isDirect,
+    prefHours
+  ).then(cheapestFlight => {
+    console.log('Vuelo más barato:', {
+      offerId: cheapestFlight.offerId,
+      airline: cheapestFlight.airline,
+      origin: cheapestFlight.origin,
+      destination: cheapestFlight.destination,
+      departureDate: cheapestFlight.departureDate,
+      duration: cheapestFlight.duration,
+      price: cheapestFlight.price.total
+    });
+  
+    res.json(cheapestFlight);
+  });
+})
+
+app.get('/api/flights', async (req, res) => {
+  const origin = 'SDQ'; // Origen
+const destination = 'JFK'; // Destino
+const startDate = '2024-12-05'; // Fecha de inicio del rango
+const endDate = '2024-12-06'; // Fecha de fin del rango
+const maxPrice = 500; // Precio máximo
+const maxDuration = 10; // Duración máxima en horas
+const isDirect = true; // Preferencia por vuelos directos
+const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 PM)
+
+  // const {  origin, destination, startDate, endDate} = req.query
+    try {
+      // const {  origin, destination, startDate, endDate} = req.query
+      const response = await amadeus.shopping.flightOffersSearch.get({
+        currencyCode: "USD",
+        originLocationCode: origin,
+        destinationLocationCode: destination,
+        departureDate: startDate,
+        adults: 1,
+        max: 15, // Aumentamos el número de resultados para tener más opciones
+      });
+      res.json(response.data);
+    }catch (e) {
+      console.error(e);
+      res.status(500).json({ error: 'Error al buscar vuelos' });
+    }
+  });
+
+
+
+
+app.post('/api/bookflight', async (req, res) => {
+ const response = await bookFlight(req, res)
+    res.json(response.data)    
+  })
+
 
 // Función para buscar vuelos baratos con filtros adicionales
 async function getFilteredFlights(origin, destination, departureDate, maxPrice, maxDuration, preferDirect, departureTimeWindow) {
   try {
     const response = await amadeus.shopping.flightOffersSearch.get({
+      currencyCode: "USD",
       originLocationCode: origin,
       destinationLocationCode: destination,
       departureDate: departureDate,
       adults: 1,
-      max: 15 // Aumentamos el número de resultados para tener más opciones
+      max: 15, // Aumentamos el número de resultados para tener más opciones
+      
     });
 
     let flights = response.data;
@@ -198,9 +295,10 @@ async function bookFlight(flights, passengerDetails) {
     });
 
     console.log("Reserva ", response.data.id, 'Confirmada ✔');
-    getFlightOrder(response.data.id)
+    return (response.data)
   } catch (error) {
-    console.error("Error al reservar el vuelo:", error.response);
+    console.error("Error al reservar el vuelo:", error.data);
+    return ('Error al reservar el vuelo')
   }
 }
 
@@ -224,55 +322,11 @@ async function cancelFlightOrder(flightOrderId) {
   }
 }
 
-// Ejemplo de búsqueda de vuelos baratos en un rango de fechas
-const origin = 'JFK'; // Origen
-const destination = 'SDQ'; // Destino
-const startDate = '2024-12-05'; // Fecha de inicio del rango
-const endDate = '2024-12-30'; // Fecha de fin del rango
-const maxPrice = 500; // Precio máximo
-const maxDuration = 10; // Duración máxima en horas
-const isDirect = true; // Preferencia por vuelos directos
-const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 PM)
 
-// Detalles del pasajero
-const passengerDetails = {
-  firstName: 'Margaret Andreina',
-  lastName: 'Quezada Encarnacion',
-  dateOfBirth: "1997-12-25",
-  email: 'johndoe@gmail.com',
-  phone: '+1 234 567 8901',
-  birthPlace: 'DO',
-  issuanceCountry: 'US',
-  nationality: 'DO',
-  documentNumber: '5445465665446',
-  expiryDate: '2025-12-31',
-  issuanceDate: '2020-01-01'
-};
 
 // Buscar el vuelo más barato en el rango de fechas
-findCheapestFlightInRange(
-  origin,
-  destination,
-  startDate,
-  endDate,
-  maxPrice,
-  maxDuration,
-  isDirect,
-  prefHours
-).then(cheapestFlight => {
-  console.log('Vuelo más barato:', {
-    offerId: cheapestFlight.offerId,
-    airline: cheapestFlight.airline,
-    origin: cheapestFlight.origin,
-    destination: cheapestFlight.destination,
-    departureDate: cheapestFlight.departureDate,
-    duration: cheapestFlight.duration,
-    price: cheapestFlight.price.total
-  });
 
-  // Reservar el vuelo encontrado
-  if (cheapestFlight.price.total < 500 ){
-    console.log('Reservando el vuelo...');
-    bookFlight(cheapestFlight, passengerDetails);
-  }
-});
+
+app.listen(3000, () => {
+  console.log('API Amadeus Flight Search listening on port 3000!');
+})
