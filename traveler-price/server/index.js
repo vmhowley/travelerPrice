@@ -66,23 +66,22 @@ app.get('/api/cheapestflight', async (req, res) => {
 })
 
 app.get('/api/flights', async (req, res) => {
-  const origin = 'SDQ'; // Origen
-const destination = 'JFK'; // Destino
-const startDate = '2024-12-05'; // Fecha de inicio del rango
-const endDate = '2024-12-06'; // Fecha de fin del rango
-const maxPrice = 500; // Precio máximo
-const maxDuration = 10; // Duración máxima en horas
-const isDirect = true; // Preferencia por vuelos directos
-const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 PM)
+//   const origin = 'SDQ'; // Origen
+// const destination = 'JFK'; // Destino
+// const startDate = '2024-12-05'; // Fecha de inicio del rango
+// const endDate = '2024-12-06'; // Fecha de fin del rango
+// const maxPrice = 500; // Precio máximo
+// const maxDuration = 10; // Duración máxima en horas
+// const isDirect = true; // Preferencia por vuelos directos
+// const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 PM)
 
   // const {  origin, destination, startDate, endDate} = req.query
     try {
-      // const {  origin, destination, startDate, endDate} = req.query
       const response = await amadeus.shopping.flightOffersSearch.get({
         currencyCode: "USD",
-        originLocationCode: origin,
-        destinationLocationCode: destination,
-        departureDate: startDate,
+        originLocationCode: req.query.origin,
+        destinationLocationCode: req.query.destination,
+        departureDate: req.query.departureDate,
         adults: 1,
         max: 15, // Aumentamos el número de resultados para tener más opciones
       });
@@ -92,9 +91,6 @@ const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 P
       res.status(500).json({ error: 'Error al buscar vuelos' });
     }
   });
-
-
-
 
 app.post('/api/bookflight', async (req, res) => {
  const response = await bookFlight(req, res)
