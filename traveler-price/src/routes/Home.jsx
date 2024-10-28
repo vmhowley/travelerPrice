@@ -2,34 +2,57 @@ import React, { useState } from 'react'
 
 function Home() {
     const [data, setData] = useState({})
-    const [citySearch, setCitySearch] = useState(null)
+    const [from, setFrom] = useState([])
+    const [to, setTo] = useState([])
     const [locations, setLocations] = useState()
+    const [keyword, setKeyword] = useState()
   
     const handleInput = (e) => {
         setData({...data, [e.currentTarget.name]: e.target.value})
-        console.log(data)
+        console.log(citySearch)
     }
 
-    const handleSearch = async (e) => {
-      const keyword = e.target.value
-      const url = `http://localhost:3000/api/citysearch?keyword=${keyword}`
-      if (e.target.value != '') {
-      
+    const handleFrom = async (e) => {
+      setKeyword(e.target.value)
+      const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
         try {
           const response = await fetch(url);
           if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
           }
-          
           const json = await response.json();
-          setCitySearch(json)
-          console.log(data)
+          if (!json.code){
+            setFrom(json)
+            console.log(json)
+          }else{
+            setFrom(json)
+            console.log(json)
+          }
         } catch (error) {
-          setCitySearch(null)
           console.error(error.message);
         }
         
       }
+    const handleTo = async (e) => {
+      setKeyword(e.target.value)
+      const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+          const json = await response.json();
+          if (!json.code){
+            setTo(json)
+            console.log(json)
+          }else{
+            setTo(json)
+            console.log(json)
+          }
+        } catch (error) {
+          console.error(error.message);
+        }
+        
       }
   return (
 <>
@@ -63,15 +86,18 @@ function Home() {
               </svg>
               <span className="text-sm text-gray-600">From</span>
             </div>
-            <input type="text" name='departeur'  onChange={handleSearch} className="w-full text-lg font-medium focus:outline-none border  rounded-full p-2 uppercase"  />
-            <div className={`shadow bg-white w-full  rounded-xl relative -top- p-3 ${!data ? 'hidden' : 'block'}`}>
+            <input type="text" name='departeur' onChange={handleFrom} className="w-full text-lg font-medium focus:outline-none border  rounded-full p-2 uppercase"  />
+              <div className={`shadow bg-white w-full  rounded-xl relative -top- p-3 ${keyword != 'clientError' ? 'block' : 'hidden'}`}>
               <ul className='grid gap-3'>
-              {citySearch  ? citySearch.map((item)=> {
-                return  <li key={item.id} className='hover:bg-black/20 rounded-xl p-2 cursor-pointer '>{item.name} ({item.iataCode})</li>
-              }) : '' }   </ul>
+              {!from.code  ? from.map((item)=> {
+                return  <li key={item.id} className={`hover:bg-black/20 rounded-xl p-2 cursor-pointer }`}>{item.name} ({item.iataCode})</li>
+              }) : '' } 
+                </ul>
             </div>
             <p className="text-xs text-gray-500">Indira Gandhi International Airport</p>
           </div>
+          
+          
           
           <div className="flex justify-end">
             <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +113,14 @@ function Home() {
               </svg>
               <span className="text-sm text-gray-600">To</span>
             </div>
-            <input type="text" name='destination'  className="w-full text-lg font-medium focus:outline-none uppercase rounded-full border p-2"  />
+            <input type="text" name='to' onChange={handleTo}  className="w-full text-lg font-medium focus:outline-none uppercase rounded-full border p-2"  />
+            <div className={`shadow bg-white w-full  rounded-xl relative -top- p-3 ${keyword != 'clientError' ? 'block' : 'hidden'}`}>
+              <ul className='grid gap-3'>
+              {!to.code  ? to.map((item)=> {
+                return  <li key={item.id} className={`hover:bg-black/20 rounded-xl p-2 cursor-pointer }`}>{item.name} ({item.iataCode})</li>
+              }) : '' } 
+                </ul>
+            </div>
             <p className="text-xs text-gray-500">Netaji Subhash Chandra Bose International Airport</p>
           </div>
           

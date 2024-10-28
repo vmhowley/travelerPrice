@@ -56,7 +56,7 @@ app.get(`/api/citySearch`, async (req, res) => {
     try { 
       await res.json(response.data); 
     } catch (err) { 
-    await res.json(' '); 
+    await res.json(err); 
   } 
 });
 
