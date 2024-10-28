@@ -67,7 +67,7 @@ function Home() {
             <div className={`shadow bg-white w-full  rounded-xl relative -top- p-3 ${!data ? 'hidden' : 'block'}`}>
               <ul className='grid gap-3'>
               {citySearch  ? citySearch.map((item)=> {
-                return  <li key={item.id} className='hover:bg-black/20 rounded-xl p-2 cursor-pointer '>{item.name} {item.detailedName}</li>
+                return  <li key={item.id} className='hover:bg-black/20 rounded-xl p-2 cursor-pointer '>{item.name} ({item.iataCode})</li>
               }) : '' }   </ul>
             </div>
             <p className="text-xs text-gray-500">Indira Gandhi International Airport</p>
