@@ -1,35 +1,36 @@
 require('dotenv').config();
 const express = require('express');
-const app = express();
 const cors = require('cors');
+const app = express();
+app.use(cors());
+
 const Amadeus = require('amadeus');
 
 // Ejemplo de búsqueda de vuelos baratos en un rango de fechas
 const origin = 'SDQ'; // Origen
-const destination = 'JFK'; // Destino
-const startDate = '2024-12-05'; // Fecha de inicio del rango
-const endDate = '2024-12-06'; // Fecha de fin del rango
-const maxPrice = 500; // Precio máximo
-const maxDuration = 10; // Duración máxima en horas
-const isDirect = true; // Preferencia por vuelos directos
-const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 PM)
+const destination = 'MDE'; // Destino
+const startDate = '2025-02-15'; // Fecha de inicio del rango
+const endDate = '2025-02-30'; // Fecha de fin del rango
+const maxPrice = 700; // Precio máximo
+const maxDuration = 15; // Duración máxima en horas
+const isDirect = false; // Preferencia por vuelos directos
+const prefHours = { start: 0, end: 24 }; // Horario preferido (entre 6 AM y 10 PM)
 
-// Detalles del pasajero
-const passengerDetails = {
-  firstName: 'Marasdasgaret asd',
-  lastName: 'Quezasdada asd',
-  dateOfBirth: "1997-12-25",
-  email: 'johndoe@gmail.com',
-  phone: '+1 234 567 8901',
-  birthPlace: 'DO',
-  issuanceCountry: 'US',
-  nationality: 'DO',
-  documentNumber: '5445465665446',
-  expiryDate: '2025-12-31',
-  issuanceDate: '2020-01-01'
-};
+// // Detalles del pasajero
+// const passengerDetails = {
+//   firstName: 'Marasdasgaret asd',
+//   lastName: 'Quezasdada asd',
+//   dateOfBirth: "1997-12-25",
+//   email: 'johndoe@gmail.com',
+//   phone: '+1 234 567 8901',
+//   birthPlace: 'DO',
+//   issuanceCountry: 'US',
+//   nationality: 'DO',
+//   documentNumber: '5445465665446',
+//   expiryDate: '2025-12-31',
+//   issuanceDate: '2020-01-01'
+// };
 
-app.use(cors());
 
 // Configura el cliente de Amadeus con tus credenciales
 const amadeus = new Amadeus({
@@ -38,20 +39,29 @@ const amadeus = new Amadeus({
   hostname:'production'
 });
 
-app.get('/api/locations', async (req, res) =>{
 
-  try {
 
-    const response = await amadeus.referenceData.locations.get({
-      keyword: 'LON',
-      subType: 'AIRPORT,CITY',
-    }).then((response) =>{
-      res.json(response.data) 
-    });
-  }catch(error){
-    console.log(error)
-  }
-  })
+
+
+
+app.get(`/api/citySearch`, async (req, res) => { 
+  console.log(req.query); 
+  var keywords = req.query.keyword; 
+  const response = await amadeus.referenceData.locations
+    .get({ 
+      keyword: keywords, 
+      subType: "CITY,AIRPORT", 
+    }) 
+    .catch((x) => res.json(x)); 
+    try { 
+      await res.json(response.data); 
+    } catch (err) { 
+    await res.json(' '); 
+  } 
+});
+
+
+
 
 app.get('/api/cheapestflight', async (req, res) => {
   // const {  origin, destination, startDate, endDate, maxPrice, maxDuration, isDirect, prefHours} = req.query

@@ -1,14 +1,36 @@
 import React, { useState } from 'react'
 
 function Home() {
-    const [data, setData] = useState()
+    const [data, setData] = useState({})
+    const [citySearch, setCitySearch] = useState(null)
     const [locations, setLocations] = useState()
-    const handleLocation = () => {
-            fetch('http://localhost:3000/api/locations')
-    }
+  
     const handleInput = (e) => {
         setData({...data, [e.currentTarget.name]: e.target.value})
+        console.log(data)
     }
+
+    const handleSearch = async (e) => {
+      const keyword = e.target.value
+      const url = `http://localhost:3000/api/citysearch?keyword=${keyword}`
+      if (e.target.value != '') {
+      
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+          
+          const json = await response.json();
+          setCitySearch(json)
+          console.log(data)
+        } catch (error) {
+          setCitySearch(null)
+          console.error(error.message);
+        }
+        
+      }
+      }
   return (
 <>
 <div className="min-h-screen bg-gray-100 p-4">
@@ -41,7 +63,13 @@ function Home() {
               </svg>
               <span className="text-sm text-gray-600">From</span>
             </div>
-            <input type="text" value="Delhi" className="w-full text-lg font-medium focus:outline-none" readOnly />
+            <input type="text" name='departeur'  onChange={handleSearch} className="w-full text-lg font-medium focus:outline-none border  rounded-full p-2 uppercase"  />
+            <div className={`shadow bg-white w-full  rounded-xl relative -top- p-3 ${!data ? 'hidden' : 'block'}`}>
+              <ul className='grid gap-3'>
+              {citySearch  ? citySearch.map((item)=> {
+                return  <li key={item.id} className='hover:bg-black/20 rounded-xl p-2 cursor-pointer '>{item.name} {item.detailedName}</li>
+              }) : '' }   </ul>
+            </div>
             <p className="text-xs text-gray-500">Indira Gandhi International Airport</p>
           </div>
           
@@ -59,7 +87,7 @@ function Home() {
               </svg>
               <span className="text-sm text-gray-600">To</span>
             </div>
-            <input type="text" value="Kolkata" className="w-full text-lg font-medium focus:outline-none" readOnly />
+            <input type="text" name='destination'  className="w-full text-lg font-medium focus:outline-none uppercase rounded-full border p-2"  />
             <p className="text-xs text-gray-500">Netaji Subhash Chandra Bose International Airport</p>
           </div>
           
