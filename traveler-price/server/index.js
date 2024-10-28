@@ -50,7 +50,7 @@ app.get(`/api/citySearch`, async (req, res) => {
   const response = await amadeus.referenceData.locations
     .get({ 
       keyword: keywords, 
-      subType: "CITY,AIRPORT", 
+      subType: "AIRPORT", 
     }) 
     .catch((x) => res.json(x)); 
     try { 
