@@ -20,7 +20,7 @@ function Home() {
     }
     const handleFrom = async (e) => {
       setKeyword(e.target.value)
-      const url = `https://proposals-silence-blackberry-jerusalem.trycloudflare.com/api/citysearch?keyword=${e.target.value}`
+      const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
         try {
           const response = await fetch(url);
           if (!response.ok) {
@@ -72,6 +72,11 @@ function Home() {
   return (
 <>
 <div className='p-4'>
+<div className=' shadow  rounded-full h-26 bg-white  flex justify-between text-gray-500 text-center mx-2 mb-6 '>
+  <div className='bg-primary p-2 rounded-full w-full text-white'>One way</div>
+  <div className=' p-2 rounded-full w-full'>Round</div>
+  <div className=' p-2 rounded-full w-full'>Multicity</div>
+</div>
   <form className='bg-white p-4 shadow rounded-xl grid gap-6 static' action="">
     <div onClick={handleFromTab} className={`grid ${open ? 'fixed inset-0 z-50' : ''}`}>
       <input  className='border rounded-xl h-14 p-2 placeholder-gray-950 font-semibold ps-8' type="text" id="from" name="from" placeholder='Leaving from'  onChange={handleFrom} />

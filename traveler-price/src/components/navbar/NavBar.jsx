@@ -8,34 +8,34 @@ function NavBar() {
   return (
     <div className='fixed flex w-full bottom-0 left-0 p-4 bg-[#EC441E] text-white/70 z-50'>
       <div className='w-full'>
-        <ul className='flex justify-between'>
+        <ul className='flex justify-between '>
             <li className=''>
             <div className='flex justify-center'>
-                <img className='' src={HomeIcon} alt="" />
+                <img className='invert' src={HomeIcon} alt="" />
             </div>
-              <a href='#'>Home</a>
+              <a className='' href='#'>Home</a>
             </li>
             <li className=''>
             <div className=' flex justify-center'>
-                <img src={BookingIcon} alt="" />
+                <img className='invert' src={BookingIcon} alt="" />
               </div>
               <a href='#'>Booking</a>
             </li>
             <li>
             <div className=' flex justify-center'>
-                <img src={OfferIcon} alt="" />
+                <img className='invert' src={OfferIcon} alt="" />
               </div>
               <a href='#'>Offer</a>
             </li>
             <li>
             <div className=' flex justify-center'>
-                <img src={InboxIcon} alt="" />
+                <img className='invert' src={InboxIcon} alt="" />
               </div>
               <a href='#'>Inbox</a>
             </li>
             <li>
             <div className=' flex justify-center'>
-                <img src={UserIcon} alt="" />
+                <img className='invert' src={UserIcon} alt="" />
               </div>
               <a href='#'>Profile</a>
             </li>
