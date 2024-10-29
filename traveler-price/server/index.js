@@ -40,10 +40,6 @@ const amadeus = new Amadeus({
 });
 
 
-
-
-
-
 app.get(`/api/citySearch`, async (req, res) => { 
   console.log(req.query); 
   var keywords = req.query.keyword; 
@@ -51,8 +47,7 @@ app.get(`/api/citySearch`, async (req, res) => {
     .get({ 
       keyword: keywords, 
       subType: "AIRPORT", 
-    }) 
-    .catch((x) => res.json(x)); 
+    }).catch((x) => res.json(x)); 
     try { 
       await res.json(response.data); 
     } catch (err) { 
