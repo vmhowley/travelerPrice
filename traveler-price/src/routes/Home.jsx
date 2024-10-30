@@ -8,8 +8,12 @@ function Home() {
   const [to, setTo] = useState([])
   const [open, setOpen] = useState(null)
   const [locations, setLocations] = useState([{}])
-  const [keyword, setKeyword] = useState()
-
+  window.addEventListener('keydown', (event) => {
+    console.log(event.code)
+    if (event.code === 'Escape') {
+      setOpen(false)
+    }
+  });
   const handleInput = (e) => {
     setData({ ...data, [e.currentTarget.name]: e.target.value })
     console.log(citySearch)
@@ -20,9 +24,8 @@ function Home() {
     console.log('open')
   }
   const handleFrom = async (e) => {
-    setKeyword(e.target.value)
     
-    const url = `https://logged-gmbh-entering-totally.trycloudflare.com/api/citysearch?keyword=${e.target.value}`
+    const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -42,7 +45,6 @@ function Home() {
   }
 
   const handleTo = async (e) => {
-    setKeyword(e.target.value)
     const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
@@ -65,6 +67,7 @@ function Home() {
   const handleSelection = (e) => {
     console.log(e)
     setLocations(e)
+    document.querySelector('#from').value = ' '
     setOpen(!open)
   }
   const handleSubmit = (e) => {
@@ -82,11 +85,9 @@ function Home() {
           <div className=' p-2 rounded-full w-full'>Multicity</div>
         </div>
         <form
-          className='bg-white p-4 shadow rounded-xl grid sm:flex gap-6 sm:gap-8 static'
+          className='bg-white p-4 shadow rounded-xl grid sm:flex gap-6 sm:gap-8 relative'
         >
-          <div
-            className={`grid w-full relative `}
-          >
+          <div className={`grid w-full relative `}>
             <div className='w-full relative'>
                 <button type='button' onClick={handleFromTab} className={`w-full relative  ${open? 'z-0' : 'z-40'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
                   {locations.name }
@@ -131,27 +132,27 @@ function Home() {
                   : ''}
               </ul>
             </section>
-          <div className='absolute right-6 top-12 z-30 sm:-right-9 sm:top-2'>
+            </div>
+          <div className='sm:items-center sm:content-center absolute top-16 right-6  rounded-full w-16'>
             <img
-              className='w-max rounded-full p-2 border bg-white'
+              className='border rounded-full p-1'
               src={ArrowsDownUpIcon}
               alt=''
               />
-          </div>
               </div>
               <div className='w-full relative'>
                 <button type='button' onClick={handleFromTab} className={`w-full relative  ${open? '' : 'z-40'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
                   {locations.name }
                 </button>
               <input
-                className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8 bg-black  ${
+                className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
                   open ? 'fixed inset-0  sm:absolute rounded-xl hidden    ' : 'rounded-xl  absolute left-0 z-0 '
                 } `}
                 type='text'
                 autoComplete="off"
                 id='to'
                 name='to'
-                onChange={handleFrom}
+                onChange={handleTo}
               />
             </div>
             <section
