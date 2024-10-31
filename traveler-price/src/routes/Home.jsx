@@ -6,12 +6,14 @@ function Home() {
   const [data, setData] = useState({})
   const [from, setFrom] = useState([])
   const [to, setTo] = useState([])
-  const [open, setOpen] = useState(null)
-  const [locations, setLocations] = useState([{}])
+  const [openFrom, setOpenFrom] = useState(null)
+  const [openTo, setOpenTo] = useState(null)
+  const [locationFrom, setLocationFrom] = useState([{}])
+  const [locationTo, setLocationTo] = useState([{}])
   window.addEventListener('keydown', (event) => {
     console.log(event.code)
     if (event.code === 'Escape') {
-      setOpen(false)
+      setOpenFrom(false)
     }
   });
   const handleInput = (e) => {
@@ -20,7 +22,12 @@ function Home() {
   }
   const handleFromTab = (e) => {
     document.querySelector('#from').focus()
-    setOpen(!open)
+    setOpenFrom(!openFrom)
+    console.log('open')
+  }
+  const handleToTab = (e) => {
+    document.querySelector('#to').focus()
+    setOpenTo(!openTo)
     console.log('open')
   }
   const handleFrom = async (e) => {
@@ -64,12 +71,33 @@ function Home() {
     }
   }
 
-  const handleSelection = (e) => {
+  const handleSelection = (e,locations) => {
     console.log(e)
-    setLocations(e)
-    document.querySelector('#from').value = ' '
-    setOpen(!open)
+    if (e === 'from'){
+
+      setLocationFrom(locations)
+      document.querySelector('#from').value = ' '
+      setOpenFrom(!openFrom)
+      setData(
+        {
+         ...data,
+          [e]: locations
+        }
+      )
+      
+    }else if (e === 'to'){
+      setLocationTo(locations)
+      document.querySelector('#to').value = ' '
+      setOpenTo(!openTo)
+      setData(
+        {
+         ...data,
+          [e]: locations
+        }
+      )
   }
+  
+}
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(data)
@@ -85,17 +113,18 @@ function Home() {
           <div className=' p-2 rounded-full w-full'>Multicity</div>
         </div>
         <form
+        onSubmit={handleSubmit}
           className='bg-white p-4 shadow rounded-xl grid sm:flex gap-6 sm:gap-8 relative'
         >
           <div className={`grid w-full relative `}>
             <div className='w-full relative'>
-                <button type='button' onClick={handleFromTab} className={`w-full relative  ${open? 'z-0' : 'z-40'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
-                  {locations.name }
+                <button type='button' onClick={handleFromTab} className={`w-full relative  ${openFrom? 'z-0' : 'z-40'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
+                  {locationFrom.name }
                 </button>
               <input
               
                 className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
-                  open ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl  absolute left-0  '
+                  openFrom ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl  absolute left-0  '
                 } `}
                 type='text'
                 id='from'
@@ -109,7 +138,7 @@ function Home() {
             <section
               id='from_country'
               className={`border  bg-white top-14 ${
-                open ? 'fixed inset-0 sm:absolute sm:w-96 sm:h-96 z-50 ' : 'hidden '
+                openFrom ? 'fixed inset-0 sm:absolute sm:w-96 sm:h-96 z-50 ' : 'hidden '
               }`}
               name='from_country'
               onChange={handleInput}
@@ -119,7 +148,7 @@ function Home() {
                   ? from.map((location) => (
                       <div key={location.id}>
                         <li
-                          onClick={() => {handleSelection(location)}}
+                          onClick={() => {handleSelection('from',location)}}
                           key={location.id}
                           value={location.name}
                           className='capitalize cursor-pointer rounded-xl p-2'
@@ -141,12 +170,12 @@ function Home() {
               />
               </div>
               <div className='w-full relative'>
-                <button type='button' onClick={handleFromTab} className={`w-full relative  ${open? '' : 'z-40'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
-                  {locations.name }
+                <button type='button' onClick={handleToTab} className={`w-full relative  ${openTo? '' : 'z-40'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
+                  {locationTo.name }
                 </button>
               <input
                 className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
-                  open ? 'fixed inset-0  sm:absolute rounded-xl hidden    ' : 'rounded-xl  absolute left-0 z-0 '
+                  openTo ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl  absolute left-0  '
                 } `}
                 type='text'
                 autoComplete="off"
@@ -156,11 +185,11 @@ function Home() {
               />
             </div>
             <section
-              id='from_country'
+              id='to_country'
               className={`border  bg-white top-14 ${
-                open ? 'fixed inset-0 sm:absolute sm:w-96 sm:h-96 sm:z-50 ' : 'hidden '
+                openTo ? 'fixed inset-0 sm:absolute sm:w-96 sm:h-96 z-50 ' : 'hidden '
               }`}
-              name='from_country'
+              name='to_country'
               onChange={handleInput}
             >
               <ul>
@@ -168,7 +197,7 @@ function Home() {
                   ? to.map((location) => (
                       <div key={location.id}>
                         <li
-                          onClick={() => {handleSelection(location)}}
+                          onClick={() => {handleSelection('to',location)}}
                           key={location.id}
                           value={location.name}
                           className='capitalize cursor-pointer rounded-xl p-2'
@@ -182,7 +211,7 @@ function Home() {
               </ul>
             </section>
           <div></div>
-          <button type='submit'></button>
+          <button type='submit'>Enviar</button>
         </form>
       </div>
     </>
