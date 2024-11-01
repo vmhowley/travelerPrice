@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArrowsDownUpIcon from '../assets/icons/ArrowsDownUp.svg'
-
+import AirplaneInFlightIcon from '../assets/icons/AirplaneInFlight.svg'
+import AirplaneLandingIcon from '../assets/icons/AirplaneLanding.svg'
 function Home() {
   const [data, setData] = useState({})
   const [from, setFrom] = useState([])
@@ -14,6 +15,7 @@ function Home() {
     console.log(event.code)
     if (event.code === 'Escape') {
       setOpenFrom(false)
+      setOpenTo(false)
     }
   });
   const handleInput = (e) => {
@@ -118,13 +120,13 @@ function Home() {
         >
           <div className={`grid w-full relative `}>
             <div className='w-full relative'>
-                <button type='button' onClick={handleFromTab} className={`w-full relative  ${openFrom? 'z-0' : 'z-40'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
-                  {locationFrom.name }
+                <button type='button' onClick={handleFromTab} className={`w-full relative flex gap-4 items-center  ${openFrom? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
+                  <img src={AirplaneInFlightIcon} alt="" />{locationFrom.name || 'Leaving from'}
                 </button>
               <input
               
                 className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
-                  openFrom ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl  absolute left-0  '
+                  openFrom ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl absolute  left-0 top-0  '
                 } `}
                 type='text'
                 id='from'
@@ -162,27 +164,36 @@ function Home() {
               </ul>
             </section>
             </div>
-          <div className='sm:items-center sm:content-center absolute top-16 right-6  rounded-full w-16'>
+          <div className='absolute z-40 bg-white w-max top-16 right-6  rounded-full '>
             <img
-              className='border rounded-full p-1'
+              className='border rounded-full p-2'
               src={ArrowsDownUpIcon}
               alt=''
               />
               </div>
               <div className='w-full relative'>
-                <button type='button' onClick={handleToTab} className={`w-full relative  ${openTo? '' : 'z-40'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
-                  {locationTo.name }
+              <div className='w-full relative'>
+                <button type='button' onClick={handleToTab} className={`w-full relative flex gap-4 items-center  ${openTo? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
+                  <img src={AirplaneLandingIcon} alt="" />
+                  <div>
+                  <h1>{locationFrom.address.cityName  || 'Going to'}({locationFrom.iataCode})</h1>
+                  <p className='font-light text-xs'>{locationFrom.address.countryName}</p>
+                  </div>
                 </button>
               <input
+              
                 className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
-                  openTo ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl  absolute left-0  '
+                  openTo ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl absolute  left-0 top-0  '
                 } `}
                 type='text'
-                autoComplete="off"
                 id='to'
                 name='to'
+                autoComplete="off"
+                
                 onChange={handleTo}
+                
               />
+            </div>
             </div>
             <section
               id='to_country'
