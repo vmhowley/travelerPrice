@@ -4,13 +4,14 @@ import ArrowsDownUpIcon from '../assets/icons/ArrowsDownUp.svg'
 import AirplaneInFlightIcon from '../assets/icons/AirplaneInFlight.svg'
 import AirplaneLandingIcon from '../assets/icons/AirplaneLanding.svg'
 function Home() {
-  const [data, setData] = useState({})
-  const [from, setFrom] = useState([])
-  const [to, setTo] = useState([])
-  const [openFrom, setOpenFrom] = useState(null)
-  const [openTo, setOpenTo] = useState(null)
-  const [locationFrom, setLocationFrom] = useState([{}])
-  const [locationTo, setLocationTo] = useState([{}])
+  const [data, setData] = useState({});
+  const [from, setFrom] = useState([]);
+  const [to, setTo] = useState([]);
+  const [openFrom, setOpenFrom] = useState(null);
+  const [openTo, setOpenTo] = useState(null);
+  const [locationFrom, setLocationFrom] = useState([{}]);
+  const [locationTo, setLocationTo] = useState([{}]);
+
   window.addEventListener('keydown', (event) => {
     console.log(event.code)
     if (event.code === 'Escape') {
@@ -18,9 +19,9 @@ function Home() {
       setOpenTo(false)
     }
   });
+
   const handleInput = (e) => {
     setData({ ...data, [e.currentTarget.name]: e.target.value })
-    console.log(citySearch)
   }
   const handleFromTab = (e) => {
     document.querySelector('#from').focus()
@@ -34,7 +35,7 @@ function Home() {
   }
   const handleFrom = async (e) => {
     
-    const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
+    const url = `https://ali-consistency-panama-strip.trycloudflare.com/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -54,7 +55,7 @@ function Home() {
   }
 
   const handleTo = async (e) => {
-    const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
+    const url = `https://ali-consistency-panama-strip.trycloudflare.com/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -106,7 +107,7 @@ function Home() {
   }
   return (
     <>
-      <div className='p-4'>
+      <div className='w-full p-4 '>
         <div className=' shadow  rounded-full h-26 bg-white  flex justify-between text-gray-500 text-center mx-2 mb-6 '>
           <div className='bg-primary p-2 rounded-full w-full text-white'>
             One way
@@ -116,12 +117,16 @@ function Home() {
         </div>
         <form
         onSubmit={handleSubmit}
-          className='bg-white p-4 shadow rounded-xl grid sm:flex gap-6 sm:gap-8 relative'
+          className=' p-4 shadow bg-white rounded-xl grid sm:flex gap-6 sm:gap-8 relative'
         >
           <div className={`grid w-full relative `}>
-            <div className='w-full relative'>
-                <button type='button' onClick={handleFromTab} className={`w-full relative flex gap-4 items-center  ${openFrom? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
-                  <img src={AirplaneInFlightIcon} alt="" />{locationFrom.name || 'Leaving from'}
+            <div className=' relative'>
+            <button type='button' onClick={handleFromTab} className={`w-full relative flex gap-4 items-center  ${openFrom? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
+                  <img src={AirplaneInFlightIcon} alt="" />
+                  <div>
+                  <h1>{locationFrom.address ? locationFrom.address.cityName : 'Leaving from' }</h1>
+                  <p className='font-light text-xs'>{locationFrom.name || ''} - {locationFrom.iataCode}</p>
+                  </div>
                 </button>
               <input
               
@@ -176,8 +181,8 @@ function Home() {
                 <button type='button' onClick={handleToTab} className={`w-full relative flex gap-4 items-center  ${openTo? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
                   <img src={AirplaneLandingIcon} alt="" />
                   <div>
-                  <h1>{locationFrom.address.cityName  || 'Going to'}({locationFrom.iataCode})</h1>
-                  <p className='font-light text-xs'>{locationFrom.address.countryName}</p>
+                  <h1>{locationTo.address ? locationTo.address.cityName :'Going To' }</h1>
+                  <p className='font-light text-xs'>{locationTo.name || ''} - {locationTo.iataCode}</p>
                   </div>
                 </button>
               <input
@@ -221,8 +226,18 @@ function Home() {
                   : ''}
               </ul>
             </section>
-          <div></div>
-          <button type='submit'>Enviar</button>
+          <div className='flex justify-between  '>
+            <div className='relative border rounded w-max '>
+              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Departure</span>
+              <input onChange={handleInput} id='departure_date' name='departure_date' className='py-3 px-2' type='date' />
+            </div>
+            <div className='relative border rounded w-max'>
+            <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Return</span>
+
+              <input onChange={handleInput} id='return_date' name='return_date' className=' py-3 px-2 rounded' type='date' />
+            </div>
+          </div>
+          <button className='bg-primary rounded h-12 text-white font-semibold' type='submit'>Search</button>
         </form>
       </div>
     </>

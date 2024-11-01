@@ -2,9 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
-app.use(cors());
-
 const Amadeus = require('amadeus');
+app.use(cors());
 
 // Ejemplo de búsqueda de vuelos baratos en un rango de fechas
 const origin = 'SDQ'; // Origen
@@ -16,21 +15,6 @@ const maxDuration = 15; // Duración máxima en horas
 const isDirect = false; // Preferencia por vuelos directos
 const prefHours = { start: 0, end: 24 }; // Horario preferido (entre 6 AM y 10 PM)
 
-// // Detalles del pasajero
-// const passengerDetails = {
-//   firstName: 'Marasdasgaret asd',
-//   lastName: 'Quezasdada asd',
-//   dateOfBirth: "1997-12-25",
-//   email: 'johndoe@gmail.com',
-//   phone: '+1 234 567 8901',
-//   birthPlace: 'DO',
-//   issuanceCountry: 'US',
-//   nationality: 'DO',
-//   documentNumber: '5445465665446',
-//   expiryDate: '2025-12-31',
-//   issuanceDate: '2020-01-01'
-// };
-
 
 // Configura el cliente de Amadeus con tus credenciales
 const amadeus = new Amadeus({
@@ -41,8 +25,8 @@ const amadeus = new Amadeus({
 
 
 app.get(`/api/citySearch`, async (req, res) => { 
-  console.log(req.query); 
-  var keywords = req.query.keyword; 
+  
+  let keywords = req.query.keyword; 
   const response = await amadeus.referenceData.locations
     .get({ 
       keyword: keywords, 
@@ -55,11 +39,8 @@ app.get(`/api/citySearch`, async (req, res) => {
   } 
 });
 
-
-
-
 app.get('/api/cheapestflight', async (req, res) => {
-  // const {  origin, destination, startDate, endDate, maxPrice, maxDuration, isDirect, prefHours} = req.query
+
   await findCheapestFlightInRange(
     origin,
     destination,
@@ -78,23 +59,12 @@ app.get('/api/cheapestflight', async (req, res) => {
       departureDate: cheapestFlight.departureDate,
       duration: cheapestFlight.duration,
       price: cheapestFlight.price.total
-    });
-  
-    res.json(cheapestFlight);
+    })
   });
 })
 
 app.get('/api/flights', async (req, res) => {
-//   const origin = 'SDQ'; // Origen
-// const destination = 'JFK'; // Destino
-// const startDate = '2024-12-05'; // Fecha de inicio del rango
-// const endDate = '2024-12-06'; // Fecha de fin del rango
-// const maxPrice = 500; // Precio máximo
-// const maxDuration = 10; // Duración máxima en horas
-// const isDirect = true; // Preferencia por vuelos directos
-// const prefHours = { start: 6, end: 22 }; // Horario preferido (entre 6 AM y 10 PM)
 
-  // const {  origin, destination, startDate, endDate} = req.query
     try {
       const response = await amadeus.shopping.flightOffersSearch.get({
         currencyCode: "USD",
@@ -115,7 +85,6 @@ app.post('/api/bookflight', async (req, res) => {
  const response = await bookFlight(req, res)
     res.json(response.data)    
   })
-
 
 // Función para buscar vuelos baratos con filtros adicionales
 async function getFilteredFlights(origin, destination, departureDate, maxPrice, maxDuration, preferDirect, departureTimeWindow) {
