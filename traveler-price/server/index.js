@@ -4,7 +4,8 @@ const cors = require('cors');
 const app = express();
 const Amadeus = require('amadeus');
 app.use(cors());
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 // Ejemplo de búsqueda de vuelos baratos en un rango de fechas
 const origin = 'SDQ'; // Origen
 const destination = 'MDE'; // Destino
@@ -63,22 +64,25 @@ app.get('/api/cheapestflight', async (req, res) => {
   });
 })
 
-app.get('/api/flights', async (req, res) => {
-
-    try {
-      const response = await amadeus.shopping.flightOffersSearch.get({
-        currencyCode: "USD",
-        originLocationCode: req.query.origin,
-        destinationLocationCode: req.query.destination,
-        departureDate: req.query.departureDate,
-        adults: 1,
-        max: 15, // Aumentamos el número de resultados para tener más opciones
-      });
-      res.json(response.data);
-    }catch (e) {
-      console.error(e);
-      res.status(500).json({ error: 'Error al buscar vuelos' });
-    }
+app.post('/api/flights', async (req, res) => {
+const content = req.body
+     const origin = await content.data.from.iataCode;
+   const destination = await content.data.to.iataCode;
+   const departure = await content.data.departure_date;
+  try {
+    const response = await amadeus.shopping.flightOffersSearch.get({
+      currencyCode: "USD",
+      originLocationCode: origin,
+      destinationLocationCode: destination,
+      departureDate: departure,
+      adults: 1,
+      max: 15, // Aumentamos el número de resultados para tener más opciones
+    });
+    res.json(response.data);
+  }catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al buscar vuelos' });
+  }
   });
 
 app.post('/api/bookflight', async (req, res) => {

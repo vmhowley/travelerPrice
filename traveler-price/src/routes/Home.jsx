@@ -35,7 +35,7 @@ function Home() {
   }
   const handleFrom = async (e) => {
     
-    const url = `https://tone-power-similar-feelings.trycloudflare.com/api/citysearch?keyword=${e.target.value}`
+    const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -55,7 +55,7 @@ function Home() {
   }
 
   const handleTo = async (e) => {
-    const url = `https://ali-consistency-panama-strip.trycloudflare.com/api/citysearch?keyword=${e.target.value}`
+    const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -101,8 +101,26 @@ function Home() {
   }
   
 }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    const url = `http://localhost:3000/api/flights`
+    try {
+      const response = await fetch(url,{
+        method:'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({data}),
+      })
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`)
+      }
+      const json = await response.json()
+      console.log(json)
+    } catch (error) {
+      console.error(error.message)
+    }
     console.log(data)
   }
   return (
