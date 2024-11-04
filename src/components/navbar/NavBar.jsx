@@ -7,7 +7,7 @@ import UserIcon from '../../assets/icons/user.svg'
 import { Link } from 'react-router-dom'
 function NavBar() {
   return (
-    <div className='fixed flex w-full bottom-0 left-0 p-4 bg-[#EC441E] text-white/70 z-50'>
+    <div className='fixed flex w-full bottom-0 left-0 p-4 bg-primary   font-semibold text-white/70 z-50'>
       <div className='w-full'>
         <ul className='flex justify-between '>
             <Link to={'/'} className=''>

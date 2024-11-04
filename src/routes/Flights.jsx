@@ -17,7 +17,7 @@ function Flights(props) {
       <div key={flight.id} className=' bg-white shadow  rounded-xl p-4 w-full h-max'>
         <div className='flex justify-between mb-4'>
           <div className='flex gap-2 items-center'>
-          <h2 className=' text-md font-bold shadow border bg-white text-blue-600'>JetBlue</h2>
+          <h2 className=' text-md font-bold shadow border bg-white text-blue-600'>{flight.itineraries[0].segments[0].carrierCode}</h2>
           <h2 className='text-white text-xs'>IN 230</h2>
           </div>
           <h2 className='font-semibold text-gray-500 text-xs'>{flight.itineraries[0].duration.substr(2)} ({flight.itineraries[0].segments.length > 1 ?   flight.itineraries[0].segments.length-1 +' Stop' : 'Non Stop'})</h2>

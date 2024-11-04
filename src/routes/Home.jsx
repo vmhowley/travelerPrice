@@ -129,14 +129,15 @@ function Home() {
       <img src={Loader} alt="" />
     </div>
   }
+  
   return (
     <>
       <div className='w-full p-4 '>
-        <div className=' shadow  rounded-full h-26 bg-white  flex justify-between text-gray-500 text-center mx-2 mb-6 '>
+        <div className=' shadow-md  rounded-full h-26 bg-white  flex justify-between text-gray-500 text-center mx-2 mb-6 '>
           <div className=' p-2 rounded-full w-full'>
             One way
           </div>
-          <div className=' p-2 rounded-full w-full bg-primary text-white'>Round Trip</div>
+          <div className=' p-2 rounded-full w-full bg-primary text-white '>Round Trip</div>
           <div className=' p-2 rounded-full w-full'>Multicity</div>
         </div>
         <form
@@ -252,8 +253,21 @@ function Home() {
             </section>
           <div className='flex justify-between  '>
             <div className='relative border rounded w-max '>
-              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Departure</span>
+              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'></span>
               <input onChange={handleInput} id='departure_date' name='departure_date' className='py-3 px-2 bg-white' type='date' />
+            </div>
+            <div className='relative border rounded w-max'>
+            <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Return</span>
+
+              <input onChange={handleInput} id='return_date' name='return_date' className=' py-3 px-2 rounded bg-white' type='date' />
+            </div>
+          </div>
+          <div className='flex justify-between  '>
+            <div className='relative border rounded w-max '>
+              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Traveller</span>
+              <select onChange={handleInput} id='traveller' name='traveller' className='py-3 px-2 bg-white' type='date' >
+                <option value="adults">1 Adults</option>
+              </select>
             </div>
             <div className='relative border rounded w-max'>
             <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Return</span>

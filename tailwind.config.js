@@ -9,7 +9,7 @@ export default {
       colors: {
         transparent: 'transparent',
         current: 'currentColor',
-        'primary': '#EC441E',
+        'primary': '#32CD32',
         'tahiti': {
           100: '#cffafe',
           200: '#a5f3fc',
