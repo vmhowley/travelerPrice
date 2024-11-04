@@ -2,7 +2,7 @@ import React from 'react'
 import HomeIcon from '../../assets/icons/home.svg'
 import BookingIcon from '../../assets/icons/Bookings.svg'
 import OfferIcon from '../../assets/icons/Offer2.svg'
-import InboxIcon from '../../assets/icons/inbox.svg'
+import InboxIcon from '../../assets/icons/Inbox.svg'
 import UserIcon from '../../assets/icons/user.svg'
 import { Link } from 'react-router-dom'
 function NavBar() {
