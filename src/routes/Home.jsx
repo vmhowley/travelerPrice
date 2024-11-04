@@ -36,7 +36,7 @@ function Home() {
   }
   const handleFrom = async (e) => {
     
-    const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
+    const url = `https://6728d6d98437920ba6cce561--traveler-price.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -54,7 +54,7 @@ function Home() {
   }
 
   const handleTo = async (e) => {
-    const url = `http://localhost:3000/api/citysearch?keyword=${e.target.value}`
+    const url = `https://6728d6d98437920ba6cce561--traveler-price.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -100,7 +100,7 @@ function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true);
-    const url = `http://localhost:3000/api/flights`
+    const url = `https://6728d6d98437920ba6cce561--traveler-price.netlify.app/.netlify/functions/app/api/flights`
     
     try {
       const response = await fetch(url,{
