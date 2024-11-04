@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import ArrowsDownUpIcon from '../assets/icons/ArrowsDownUp.svg'
 import AirplaneInFlightIcon from '../assets/icons/AirplaneInFlight.svg'
 import AirplaneLandingIcon from '../assets/icons/AirplaneLanding.svg'
+import { useNavigate} from 'react-router-dom'
+import Loader from '../assets/loaders/airplane.gif'
 function Home() {
   const [data, setData] = useState({});
   const [from, setFrom] = useState([]);
@@ -11,9 +13,10 @@ function Home() {
   const [openTo, setOpenTo] = useState(null);
   const [locationFrom, setLocationFrom] = useState([{}]);
   const [locationTo, setLocationTo] = useState([{}]);
+  const [loading, setLoading] = useState(null);
+  const navigate = useNavigate()
 
   window.addEventListener('keydown', (event) => {
-    console.log(event.code)
     if (event.code === 'Escape') {
       setOpenFrom(false)
       setOpenTo(false)
@@ -26,12 +29,10 @@ function Home() {
   const handleFromTab = (e) => {
     document.querySelector('#from').focus()
     setOpenFrom(!openFrom)
-    console.log('open')
   }
   const handleToTab = (e) => {
     document.querySelector('#to').focus()
     setOpenTo(!openTo)
-    console.log('open')
   }
   const handleFrom = async (e) => {
     
@@ -44,10 +45,8 @@ function Home() {
       const json = await response.json()
       if (!json.code) {
         setFrom(json)
-        console.log(json)
       } else {
         setFrom(json)
-        console.log(json)
       }
     } catch (error) {
       console.error(error.message)
@@ -64,10 +63,8 @@ function Home() {
       const json = await response.json()
       if (!json.code) {
         setTo(json)
-        console.log(json)
       } else {
         setTo(json)
-        console.log(json)
       }
     } catch (error) {
       console.error(error.message)
@@ -75,7 +72,6 @@ function Home() {
   }
 
   const handleSelection = (e,locations) => {
-    console.log(e)
     if (e === 'from'){
 
       setLocationFrom(locations)
@@ -103,10 +99,13 @@ function Home() {
 }
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true);
     const url = `http://localhost:3000/api/flights`
+    
     try {
       const response = await fetch(url,{
         method:'POST',
+        redirect: 'follow',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -117,20 +116,27 @@ function Home() {
         throw new Error(`Response status: ${response.status}`)
       }
       const json = await response.json()
-      console.log(json)
+      navigate('/flights', {state:{json}})
     } catch (error) {
       console.error(error.message)
     }
-    console.log(data)
+    setLoading(false);
+    
+
+  }
+  if (loading ) {
+    return <div className='flex justify-center   items-center  '>
+      <img src={Loader} alt="" />
+    </div>
   }
   return (
     <>
       <div className='w-full p-4 '>
         <div className=' shadow  rounded-full h-26 bg-white  flex justify-between text-gray-500 text-center mx-2 mb-6 '>
-          <div className='bg-primary p-2 rounded-full w-full text-white'>
+          <div className=' p-2 rounded-full w-full'>
             One way
           </div>
-          <div className=' p-2 rounded-full w-full'>Round</div>
+          <div className=' p-2 rounded-full w-full bg-primary text-white'>Round Trip</div>
           <div className=' p-2 rounded-full w-full'>Multicity</div>
         </div>
         <form
@@ -142,14 +148,14 @@ function Home() {
             <button type='button' onClick={handleFromTab} className={`w-full relative flex gap-4 items-center  ${openFrom? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
                   <img src={AirplaneInFlightIcon} alt="" />
                   <div>
-                  <h1>{locationFrom.address ? locationFrom.address.cityName : 'Leaving from' }</h1>
-                  <p className='font-light text-xs'>{locationFrom.name || ''} - {locationFrom.iataCode}</p>
+                  <h1>{locationFrom.address?.cityName || 'Leaving from'}</h1>
+                  <p className='font-light text-xs'>{locationFrom.name} - {locationFrom.iataCode}</p>
                   </div>
                 </button>
               <input
               
                 className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
-                  openFrom ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl absolute  left-0 top-0  '
+                  openFrom ? 'fixed inset-0 sm:absolute ' : 'rounded-xl absolute  left-0 top-0  '
                 } `}
                 type='text'
                 id='from'
@@ -199,14 +205,14 @@ function Home() {
                 <button type='button' onClick={handleToTab} className={`w-full relative flex gap-4 items-center  ${openTo? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
                   <img src={AirplaneLandingIcon} alt="" />
                   <div>
-                  <h1>{locationTo.address ? locationTo.address.cityName :'Going To' }</h1>
-                  <p className='font-light text-xs'>{locationTo.name || ''} - {locationTo.iataCode}</p>
+                  <h1>{ locationTo.address?.cityName || 'Going To' }</h1>
+                  <p className='font-light text-xs'>{locationTo.name } - {locationTo.iataCode}</p>
                   </div>
                 </button>
               <input
               
-                className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
-                  openTo ? 'fixed inset-0 sm:absolute rounded-xl    ' : 'rounded-xl absolute  left-0 top-0  '
+                className={`w-full  border h-14 p-2  font-semibold ps-8  ${
+                  openTo ? 'fixed inset-0 sm:absolute  ' : 'rounded-xl absolute  left-0 top-0  '
                 } `}
                 type='text'
                 id='to'
@@ -257,8 +263,9 @@ function Home() {
           </div>
           <button className='bg-primary rounded h-12 text-white font-semibold' type='submit'>Search</button>
         </form>
+        <hr className='border mt-6 ' />
       </div>
-    </>
+        </>
   )
 }
 
