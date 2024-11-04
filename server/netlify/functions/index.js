@@ -5,10 +5,9 @@ const app = express();
 const router = express.Router();
 const cors = require('cors');
 const Amadeus = require('amadeus');
-const serverless = require("serverless-http")
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+router.use(cors());
+router.use(express.json());
+router.use(express.urlencoded({ extended: false }));
 // Ejemplo de búsqueda de vuelos baratos en un rango de fechas
 const origin = 'SDQ'; // Origen
 const destination = 'MDE'; // Destino
@@ -346,10 +345,10 @@ async function cancelFlightOrder(flightOrderId) {
 // Buscar el vuelo más barato en el rango de fechas
 
 
-// router.listen(3000, () => {
-//   console.log('API Amadeus Flight Search listening on port 3000!');
-// })
+app.listen(3000, () => {
+  console.log('API Amadeus Flight Search listening on port 3000!');
+})
 
 app.use("/.netlify/functions/app", router);
-export const handler = serverless(app);
+module.exports.handler = serverless(app);
 
