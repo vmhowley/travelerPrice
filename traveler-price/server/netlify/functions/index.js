@@ -1,8 +1,11 @@
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const serverless = require("serverless-http");
 const app = express();
+const router = express.Router();
+const cors = require('cors');
 const Amadeus = require('amadeus');
+const serverless = require("serverless-http")
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -25,7 +28,7 @@ const amadeus = new Amadeus({
 });
 
 
-app.get(`/api/citySearch`, async (req, res) => { 
+router.get(`/api/citySearch`, async (req, res) => { 
   
   let keywords = req.query.keyword; 
   const response = await amadeus.referenceData.locations
@@ -40,7 +43,7 @@ app.get(`/api/citySearch`, async (req, res) => {
   } 
 });
 
-app.get('/api/cheapestflight', async (req, res) => {
+router.get('/api/cheapestflight', async (req, res) => {
 
   await findCheapestFlightInRange(
     origin,
@@ -64,28 +67,56 @@ app.get('/api/cheapestflight', async (req, res) => {
   });
 })
 
-app.post('/api/flights', async (req, res) => {
+router.post('/api/flights', async (req, res) => {
 const content = req.body
      const origin = await content.data.from.iataCode;
    const destination = await content.data.to.iataCode;
    const departure = await content.data.departure_date;
-  try {
+   const return_date = await content.data.return_date;
     const response = await amadeus.shopping.flightOffersSearch.get({
       currencyCode: "USD",
       originLocationCode: origin,
       destinationLocationCode: destination,
       departureDate: departure,
+      returnDate: return_date, 
+      travelClass: 'PREMIUM_ECONOMY',      // Clase de viaje (opcional)
+      nonStop: false, //Si se establece en true solo buscara vuelos sin paradas!
       adults: 1,
-      max: 15, // Aumentamos el número de resultados para tener más opciones
-    });
-    res.json(response.data);
-  }catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Error al buscar vuelos' });
-  }
+    })
+    .catch((err) => console.log(err));
+    try {
+      await res.json(JSON.parse(response.body));
+      console.log(response.body);
+    } catch (err) {
+      await res.json(err);
+    }
   });
 
-app.post('/api/bookflight', async (req, res) => {
+  router.post("/flightprice", async function (req, res) {
+    res.json(req.body);
+    inputFlight = req.body;
+    console.log(req.body);
+    const responsePricing = await amadeus.shopping.flightOffers.pricing
+      .post(
+        JSON.stringify({
+          data: {
+            type: "flight-offers-pricing",
+            flightOffers: inputFlight,
+          },
+        })
+      )
+      .catch((err) => console.log(err));
+    try {
+      await res.json(JSON.parse(responsePricing.body));
+    } catch (err) {
+      await res.json(err);
+    }
+  });
+
+
+
+
+router.post('/api/bookflight', async (req, res) => {
  const response = await bookFlight(req, res)
     res.json(response.data)    
   })
@@ -315,6 +346,10 @@ async function cancelFlightOrder(flightOrderId) {
 // Buscar el vuelo más barato en el rango de fechas
 
 
-app.listen(3000, () => {
-  console.log('API Amadeus Flight Search listening on port 3000!');
-})
+// router.listen(3000, () => {
+//   console.log('API Amadeus Flight Search listening on port 3000!');
+// })
+
+app.use("/.netlify/functions/app", router);
+export const handler = serverless(app);
+
