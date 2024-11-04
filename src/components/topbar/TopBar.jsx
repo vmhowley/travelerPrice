@@ -1,5 +1,5 @@
 import React from 'react'
-import LeftArrowIcon from '../../assets/icons/LeftArrow.svg'
+import LeftArrowIcon from '../../assets/icons/Leftarrow.svg'
 import MenuIcon from '../../assets/icons/menu.svg'
 const path = location.pathname
 
