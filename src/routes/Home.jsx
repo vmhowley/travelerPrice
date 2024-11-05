@@ -126,7 +126,7 @@ function Home() {
   }
   if (loading ) {
     return <div className='flex justify-center   items-center  '>
-      <img src={Loader} alt="" />
+      <img className='fixed inset-0' src={Loader} alt="" />
     </div>
   }
   

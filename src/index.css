@@ -7,3 +7,6 @@ body {
     font-optical-sizing: auto;
 }
 
+button {
+    color: black!important;
+}

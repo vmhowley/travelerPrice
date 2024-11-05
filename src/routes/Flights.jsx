@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import AirplaneInFlight from '../assets/icons/AirplaneInFlight.svg'
 function Flights(props) {
    
@@ -9,18 +9,20 @@ function Flights(props) {
 })
     const location = useLocation()
     const {state} = location
-    console.log(location)
+    const carriers = state.json.dictionaries.carriers
     return (
     <div className='p-4 w-full grid gap-3'>
       {state?.json.data.map((flight)=> {
+        const carrierName = flight.itineraries[0].segments[0].carrierCode
+        const carrier = carriers[carrierName].split(" ")
         return(
       <div key={flight.id} className=' bg-white shadow  rounded-xl p-4 w-full h-max'>
         <div className='flex justify-between mb-4'>
           <div className='flex gap-2 items-center'>
-          <h2 className=' text-md font-bold shadow border bg-white text-blue-600'>{flight.itineraries[0].segments[0].carrierCode}</h2>
+          <h2 className=' text-md font-bold shadow border bg-white text-blue-600 capitalize'>{carrier[0].toLowerCase()}</h2>
           <h2 className='text-white text-xs'>IN 230</h2>
           </div>
-          <h2 className='font-semibold text-gray-500 text-xs'>{flight.itineraries[0].duration.substr(2)} ({flight.itineraries[0].segments.length > 1 ?   flight.itineraries[0].segments.length-1 +' Stop' : 'Non Stop'})</h2>
+          <h2 className='font-semibold text-gray-500 text-xs'> ({flight.itineraries[0].segments.length > 1 ?   flight.itineraries[0].segments.length-1 +' - Stop' : 'Non stop'}) {flight.itineraries[0].duration.substr(2)}</h2>
         </div>
         <div className='w-full items'>
           <div className='flex gap-2 w-full items-center'>
@@ -65,9 +67,9 @@ function Flights(props) {
                 </div>
         </div>
           <div className='justify-center flex  p-4'>
-            <button className='bg-primary text-white rounded-md w-full h-10'>
+            <Link to={'/flightdetails'} state={{data:flight,carrier:carrier}} className='bg-primary text-white rounded-md w-full h-10'>
               Check
-            </button>
+            </Link>
           </div>
       </div>
     )  
