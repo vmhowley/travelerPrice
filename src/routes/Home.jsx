@@ -36,7 +36,7 @@ function Home() {
   }
   const handleFrom = async (e) => {
     
-    const url = `https://6728d9478437920fdecce55d--traveler-price.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
+    const url = `https://672a4f6e6dee42d803af2069--traveler-price.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -54,7 +54,7 @@ function Home() {
   }
 
   const handleTo = async (e) => {
-    const url = `https://6728d9478437920fdecce55d--traveler-price.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
+    const url = `https://672a4f6e6dee42d803af2069--traveler-price.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -100,7 +100,7 @@ function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true);
-    const url = `https://6728d9478437920fdecce55d--traveler-price.netlify.app/.netlify/functions/app/api/flights`
+    const url = `https://672a4f6e6dee42d803af2069--traveler-price.netlify.app/.netlify/functions/app/api/flights`
     
     try {
       const response = await fetch(url,{
