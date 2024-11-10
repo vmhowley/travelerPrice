@@ -114,7 +114,7 @@ function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true);
-    const url = `https://672a556127f617e66480646f--traveler-price.netlify.app/.netlify/functions/app/api/flights`
+    const url = `https://travbackend.netlify.app/.netlify/functions/app/api/flights`
     
     try {
       const response = await fetch(url,{
