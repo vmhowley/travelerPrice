@@ -5,6 +5,15 @@ import AirplaneInFlightIcon from '../assets/icons/AirplaneInFlight.svg'
 import AirplaneLandingIcon from '../assets/icons/AirplaneLanding.svg'
 import { useNavigate} from 'react-router-dom'
 import Loader from '../assets/loaders/airplane.gif'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 function Home() {
   const [data, setData] = useState({});
   const [from, setFrom] = useState([]);
@@ -16,15 +25,20 @@ function Home() {
   const [loading, setLoading] = useState(null);
   const navigate = useNavigate()
 
+  const [adultsCount, setAdultsCount] = useState(1)
+  const [childrensCount, setChildrensCount] = useState(0)
+
+
+
   window.addEventListener('keydown', (event) => {
     if (event.code === 'Escape') {
       setOpenFrom(false)
       setOpenTo(false)
     }
   });
-
   const handleInput = (e) => {
     setData({ ...data, [e.currentTarget.name]: e.target.value })
+    console.log(data)    
   }
   const handleFromTab = (e) => {
     document.querySelector('#from').focus()
@@ -36,7 +50,7 @@ function Home() {
   }
   const handleFrom = async (e) => {
     
-    const url = `https://672a556127f617e66480646f--traveler-price.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
+    const url = `https://travbackend.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -54,7 +68,7 @@ function Home() {
   }
 
   const handleTo = async (e) => {
-    const url = `https://672a556127f617e66480646f--traveler-price.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
+    const url = `https://travbackend.netlify.app/.netlify/functions/app/api/citysearch?keyword=${e.target.value}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -265,14 +279,67 @@ function Home() {
           <div className='flex justify-between  '>
             <div className='relative border rounded w-max '>
               <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Traveller</span>
-              <select onChange={handleInput} id='traveller' name='traveller' className='py-3 px-2 bg-white' type='date' >
-                <option value="adults">1 Adults</option>
-              </select>
-            </div>
-            <div className='relative border rounded w-max'>
-            <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Return</span>
+              <Popover>
+      <PopoverTrigger asChild>
+        <Button className='h-14 w-40' variant="outline">1 Adults</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80">
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">travellers</h4>
+            <p className="text-sm text-muted-foreground">
+              Set the dimensions for the layer.
+            </p>
+          </div>
+          <div className="grid gap-2">
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="adults">Adults</Label>
+              <div className='flex gap-3'>
+              <Button value={adultsCount-1} name='childrens' onClick={(e)=>{
+                  setAdultsCount(adultsCount - 1)
+                  handleInput(e)
 
-              <input onChange={handleInput} id='return_date' name='return_date' className=' py-3 px-2 rounded bg-white' type='date' />
+                }}  className=' rounded-full bg-transparent border'>-</Button>
+              <Input
+                id="adults"
+                name="adults"
+                onChange={handleInput}
+                value={adultsCount}
+                className=" h-8 w-16 p-2 text-center"
+                />
+                <Button value={adultsCount+1} name='adults' onClick={(e)=>{
+                  setAdultsCount(adultsCount + 1)
+                  handleInput(e)
+
+                }}  className=' rounded-full bg-transparent border'>+</Button>
+                </div>
+            </div>
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="width">Children</Label>
+              <div className='flex gap-3'>
+              <Button value={childrensCount-1} name='childrens' onClick={(e)=>{
+                  setChildrensCount(childrensCount - 1)
+                  handleInput(e)
+
+                }}  className=' rounded-full bg-transparent border'>-</Button>
+              <Input
+                id="childrens"
+                name="childrens"
+                value={childrensCount}
+                onChange={handleInput}
+                className=" h-8 w-16 p-2 text-center"
+                />
+                <Button value={childrensCount+1} name='childrens' onClick={(e)=>{
+                  setChildrensCount(childrensCount + 1)
+                  handleInput(e)
+
+                }}  className=' rounded-full bg-transparent border'>+</Button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
             </div>
           </div>
           <button className='bg-primary rounded h-12 text-white font-semibold' type='submit'>Search</button>
