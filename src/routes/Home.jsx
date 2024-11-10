@@ -274,7 +274,7 @@ function Home() {
             </section>
           <div className='flex justify-between  '>
             <div className='relative border rounded w-max '>
-              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'></span>
+              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Departure</span>
               <input onChange={handleInput} id='departure_date' name='departure_date' className='py-3 px-2 bg-white' type='date' />
             </div>
             <div className='relative border rounded w-max'>
