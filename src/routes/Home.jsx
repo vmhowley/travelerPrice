@@ -15,7 +15,14 @@ import {
 } from "@/components/ui/popover"
 
 function Home() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    departure_date: '',
+    return_date: '',
+    origin: '',
+    destination: '',
+    adults: 1,
+    children: 0
+  });
   const [from, setFrom] = useState([]);
   const [to, setTo] = useState([]);
   const [openFrom, setOpenFrom] = useState(null);

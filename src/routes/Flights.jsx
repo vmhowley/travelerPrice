@@ -9,10 +9,11 @@ function Flights(props) {
 })
     const location = useLocation()
     const {state} = location
-    const carriers = state.json.dictionaries.carriers
+    const carriers = state.json.dictionaries?.carriers || ' '
+    console.log(state)
     return (
     <div className='p-4 w-full grid gap-3'>
-      {state?.json.data.map((flight)=> {
+      {state.json.data?.map((flight)=> {
         const carrierName = flight.itineraries[0].segments[0].carrierCode
         const carrier = carriers[carrierName].split(" ")
         return(
