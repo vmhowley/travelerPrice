@@ -163,7 +163,7 @@ function Home() {
         </div>
         <form
         onSubmit={handleSubmit}
-          className=' p-4 shadow bg-white rounded-xl grid sm:flex gap-6 sm:gap-8 relative'
+          className=' p-4 shadow bg-white rounded-xl grid md:flex gap-6 sm:gap-8 relative'
         >
           <div className={`grid w-full relative `}>
             <div className=' relative'>
@@ -215,7 +215,7 @@ function Home() {
               </ul>
             </section>
             </div>
-          <div className='absolute z-40 bg-white w-max top-16 right-6  rounded-full '>
+          <div className='absolute z-40 bg-white w-max top-16 right-6  rounded-full md:left-[255px] md:top-6 md:rotate-90'>
             <img
               className='border rounded-full p-2'
               src={ArrowsDownUpIcon}
@@ -272,19 +272,19 @@ function Home() {
                   : ''}
               </ul>
             </section>
-          <div className='flex justify-between  '>
-            <div className='relative border rounded w-max '>
+          <div className='flex justify-between  gap-4'>
+            <div className='relative border rounded-xl w-max '>
               <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Departure</span>
               <input onChange={handleInput} id='departure_date' name='departure_date' className='py-3 px-2 bg-white' type='date' />
             </div>
-            <div className='relative border rounded w-max'>
+            <div className='relative border rounded-xl w-max'>
             <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Return</span>
 
               <input onChange={handleInput} id='return_date' name='return_date' className=' py-3 px-2 rounded bg-white' type='date' />
             </div>
           </div>
-          <div className='flex justify-between  '>
-            <div className='relative border rounded w-max '>
+          <div className='flex justify-between gap-4'>
+            <div className='relative border rounded-xl w-max '>
               <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Traveller</span>
               <Popover>
       <PopoverTrigger asChild>
@@ -349,7 +349,7 @@ function Home() {
     </Popover>
             </div>
           </div>
-          <button className='bg-primary rounded h-12 text-white font-semibold' type='submit'>Search</button>
+          <button className='bg-primary rounded h-12 text-white font-semibold w-80' type='submit'>Search</button>
         </form>
         <hr className='border mt-6 ' />
       </div>
