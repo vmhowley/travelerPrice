@@ -13,11 +13,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-
+import { addDays, format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
 function Home() {
+  const [date, setDate] = useState({
+    from: new Date(),
+    to: addDays(new Date(), 2),
+  })
+
   const [data, setData] = useState({
-    departure_date: '',
-    return_date: '',
+    departure_date: Date.parse(),
+    return_date: date.to,
+    date: date,
     origin: '',
     destination: '',
     adults: 1,
@@ -30,10 +39,9 @@ function Home() {
   const [locationFrom, setLocationFrom] = useState([{}]);
   const [locationTo, setLocationTo] = useState([{}]);
   const [loading, setLoading] = useState(null);
-  const navigate = useNavigate()
-
   const [adultsCount, setAdultsCount] = useState(1)
   const [childrensCount, setChildrensCount] = useState(0)
+  const navigate = useNavigate()
 
 
 
@@ -273,15 +281,45 @@ function Home() {
               </ul>
             </section>
           <div className='flex justify-between  gap-4'>
-            <div className='relative border rounded-xl w-max '>
-              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Departure</span>
-              <input onChange={handleInput} id='departure_date' name='departure_date' className='py-3 px-2 bg-white' type='date' />
+            <div className='relative border rounded-xl w-full '>
+              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Date</span>
+              <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            id="date"
+            variant={"outline"}
+            className={cn(
+              "w-full h-14 flex justify-start text-left font-normal",
+              !date && "text-muted-foreground"
+            )}
+          >
+            <CalendarIcon />
+            {date?.from ? (
+              date.to ? (
+                <>
+                  {format(date.from, "LLL dd, y")} -{" "}
+                  {format(date.to, "LLL dd, y")}
+                </>
+              ) : (
+                format(date.from, "LLL dd, y")
+              )
+            ) : (
+              <span>Pick a date</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0  flex relative " align="start">
+          <Calendar
+            mode="range"
+            defaultMonth={date?.from}
+            selected={date}
+            onSelect={setDate}
+            numberOfMonths={1}
+          />
+        </PopoverContent>
+      </Popover>
             </div>
-            <div className='relative border rounded-xl w-max'>
-            <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Return</span>
-
-              <input onChange={handleInput} id='return_date' name='return_date' className=' py-3 px-2 rounded bg-white' type='date' />
-            </div>
+            
           </div>
           <div className='flex justify-between gap-4'>
             <div className='relative border rounded-xl w-max '>
