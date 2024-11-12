@@ -171,10 +171,11 @@ function Home() {
         </div>
         <form
         onSubmit={handleSubmit}
-          className='justify-center  p-4 shadow bg-white rounded-xl grid md:flex gap-6 sm:gap-8 relative'
+          className=' p-4 shadow bg-white rounded-xl grid md:flex gap-6 sm:gap-8 relative'
         >
-            <div className='relative'>
-            <button type='button' onClick={handleFromTab} className={`w-full relative flex gap-4 items-center  ${openFrom? 'z-0' : 'z-30'}   rounded-xl  h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
+          <div className={`grid w-full relative `}>
+            <div className=' relative'>
+            <button type='button' onClick={handleFromTab} className={`w-full relative flex gap-4 items-center  ${openFrom? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
                   <img src={AirplaneInFlightIcon} alt="" />
                   <div>
                   <h1>{locationFrom.address?.cityName || 'Leaving from'}</h1>
@@ -183,7 +184,7 @@ function Home() {
                 </button>
               <input
               
-                className={` w-full border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
+                className={`w-full  border h-14 p-2 placeholder-gray-950 font-semibold ps-8  ${
                   openFrom ? 'fixed inset-0 sm:absolute ' : 'rounded-xl absolute  left-0 top-0  '
                 } `}
                 type='text'
@@ -194,6 +195,7 @@ function Home() {
                 onChange={handleFrom}
                 
               />
+            </div>
             <section
               id='from_country'
               className={`border  bg-white top-14 ${
@@ -228,8 +230,9 @@ function Home() {
               alt=''
               />
               </div>
-              <div className=' relative'>
-                <button type='button' onClick={handleToTab} className={`relative flex gap-4 items-center  ${openTo? 'z-0' : 'z-30'}   rounded-xl   w-full h-14  placeholder-gray-950 font-semibold text ps-6`}>
+              <div className='w-full relative'>
+              <div className='w-full relative'>
+                <button type='button' onClick={handleToTab} className={`w-full relative flex gap-4 items-center  ${openTo? 'z-0' : 'z-30'}   rounded-xl  border h-14 p-2 placeholder-gray-950 font-semibold text-left ps-6`}>
                   <img src={AirplaneLandingIcon} alt="" />
                   <div>
                   <h1>{ locationTo.address?.cityName || 'Going To' }</h1>
@@ -238,7 +241,7 @@ function Home() {
                 </button>
               <input
               
-                className={`w-full border h-14 p-2  font-semibold ps-8  ${
+                className={`w-full  border h-14 p-2  font-semibold ps-8  ${
                   openTo ? 'fixed inset-0 sm:absolute  ' : 'rounded-xl absolute  left-0 top-0  '
                 } `}
                 type='text'
@@ -249,6 +252,7 @@ function Home() {
                 onChange={handleTo}
                 
               />
+            </div>
             </div>
             <section
               id='to_country'
@@ -276,17 +280,6 @@ function Home() {
                   : ''}
               </ul>
             </section>
-<<<<<<< HEAD
-          <div className='flex  justify-center  gap-4'>
-            <div className='relative border rounded-xl w-max  '>
-              <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Departure</span>
-              <input onChange={handleInput} id='departure_date' name='departure_date' className='py-3 px-2 bg-white' type='date' />
-            </div>
-            <div className='relative border rounded-xl w-max'>
-            <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Return</span>
-
-              <input onChange={handleInput} id='return_date' name='return_date' className=' py-3 px-2 rounded bg-white' type='date' />
-=======
           <div className='flex justify-between  gap-4'>
             <div className='relative border rounded-xl w-full '>
               <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Date</span>
@@ -325,7 +318,6 @@ function Home() {
           />
         </PopoverContent>
       </Popover>
->>>>>>> 7183f73e95f60f14954403d8dff5c38e64785bbd
             </div>
             
           </div>
