@@ -30,15 +30,22 @@ function Flights(props) {
             <h3 className=''>{flight.itineraries[0].segments[0].departure.at.substr(11,5)}</h3>
             <div className="w-full mx-auto  px-4 sm:px-0">
             <div className='flex items-center justify-center gap-2'>
-              <hr className='bg-black w-12' /> <img className='bg-primary p-2 rounded-full inve' src={AirplaneInFlight} alt="" />
+              <hr className='bg-black w-12' /><div className='rounded-full bg-primary'>
+                <img className='p-2 invert' src={AirplaneInFlight} alt="" />
+                </div> 
               <hr className='bg-black w-12' />
             </div>
         </div>
             <h3 className=''>{flight.itineraries[0].segments[0].arrival.at.substr(11,5)}</h3>
           </div>
           <div className='flex justify-between'>
-            <div>{flight.itineraries[0].segments[0].departure.iataCode}</div>
-            <div>{flight.itineraries[0].segments[0].arrival.iataCode}</div>
+            <div className='flex'>
+              {flight.itineraries[0].segments[0].departure.iataCode}
+              {flight.itineraries[0].segments[0].departure.name}
+            </div>
+            <div>
+              {flight.itineraries[0].segments[0].arrival.iataCode}
+            </div>
           </div>
           
 <div className={`w-full ${flight.itineraries[0].segments[1] ? '' : 'hidden'}`}>
@@ -68,7 +75,7 @@ function Flights(props) {
                 </div>
         </div>
           <div className='justify-center flex  p-4'>
-            <Link to={'/flightdetails'} state={{data:flight,carrier:carrier}} className='bg-primary text-white rounded-md w-full h-10'>
+            <Link to={'/flightdetails'} state={{data:flight,carrier:carrier}} className='bg-primary text-white rounded-md w-full h-10 text-center content-center font-bold '>
               Check
             </Link>
           </div>
