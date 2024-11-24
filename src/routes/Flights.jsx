@@ -1,14 +1,13 @@
 import React, {useState} from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import AirplaneInFlight from '../assets/icons/AirplaneInFlight.svg'
-function Flights(props) {
+function Flights() {
    
-  const [steps, setStep] = useState({
-    stpesCount: [1, 2, 3],
-    currentStep: 2
-})
     const location = useLocation()
     const {state} = location
+    const from = state.locationFrom
+    const to = state.locationTo
+    const data = state.data
     const carriers = state.json.dictionaries?.carriers || ' '
     console.log(state)
     return (
@@ -75,7 +74,7 @@ function Flights(props) {
                 </div>
         </div>
           <div className='justify-center flex  p-4'>
-            <Link to={'/flightdetails'} state={{data:flight,carrier:carrier}} className='bg-primary text-white rounded-md w-full h-10 text-center content-center font-bold '>
+            <Link to={'/flightdetails'} state={{flight,carrier,from:from,to:to,data}} className='bg-primary text-white rounded-md w-full h-10 text-center content-center font-bold '>
               Check
             </Link>
           </div>

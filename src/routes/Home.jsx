@@ -20,17 +20,15 @@ import { Calendar } from "@/components/ui/calendar"
 function Home() {
   const [date, setDate] = useState({
     from: new Date(),
-    to: addDays(new Date(), 2),
+    to: addDays(new Date(), 2)
   })
 
   const [data, setData] = useState({
-    departure_date: Date.parse(),
-    return_date: date.to,
-    date: date,
     origin: '',
     destination: '',
     adults: 1,
-    children: 0
+    childrens: 0,
+    currency:'USD'
   });
   const [from, setFrom] = useState([]);
   const [to, setTo] = useState([]);
@@ -44,7 +42,6 @@ function Home() {
   const navigate = useNavigate()
 
 
-
   window.addEventListener('keydown', (event) => {
     if (event.code === 'Escape') {
       setOpenFrom(false)
@@ -53,7 +50,6 @@ function Home() {
   });
   const handleInput = (e) => {
     setData({ ...data, [e.currentTarget.name]: e.target.value })
-    console.log(data)    
   }
   const handleFromTab = (e) => {
     document.querySelector('#from').focus()
@@ -102,7 +98,6 @@ function Home() {
 
   const handleSelection = (e,locations) => {
     if (e === 'from'){
-
       setLocationFrom(locations)
       document.querySelector('#from').value = ' '
       setOpenFrom(!openFrom)
@@ -126,6 +121,12 @@ function Home() {
   }
   
 }
+
+  const handleDateChange = (date) => {
+    setDate(date)
+    setData({...data, ['departure_date']: format(date.from, 'yyyy-MM-dd') }) 
+    setData({...data, ['return_date']: format(date.to, 'yyyy-MM-dd') }) 
+  }
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true);
@@ -145,7 +146,7 @@ function Home() {
         throw new Error(`Response status: ${response.status}`)
       }
       const json = await response.json()
-      navigate('/flights', {state:{json}})
+      navigate('/flights', {state:{json,locationFrom,locationTo,data}})
     } catch (error) {
       console.error(error.message)
     }
@@ -311,9 +312,8 @@ function Home() {
         <PopoverContent className="w-auto p-0  flex relative " align="start">
           <Calendar
             mode="range"
-            defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleDateChange}
             numberOfMonths={1}
           />
         </PopoverContent>
@@ -326,7 +326,7 @@ function Home() {
               <span className='absolute -top-3 p-1 text-gray-500 text-xs bg-white'>Traveller</span>
               <Popover>
       <PopoverTrigger asChild>
-        <Button className='h-14 w-40' variant="outline">1 Adults</Button>
+        <Button className='h-14 w-40' variant="outline">{adultsCount? adultsCount +' Adults' : ''} {adultsCount && childrensCount ? ' & ' :''}{childrensCount ? childrensCount + ' Childrens' : ''} </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
         <div className="grid gap-4">
@@ -341,7 +341,7 @@ function Home() {
               <Label htmlFor="adults">Adults</Label>
               <div className='flex gap-3'>
               <Button value={adultsCount-1} name='childrens' onClick={(e)=>{
-                  setAdultsCount(adultsCount - 1)
+                  setAdultsCount(adultsCount - 1),
                   handleInput(e)
 
                 }}  className=' rounded-full bg-transparent border'>-</Button>
@@ -353,7 +353,7 @@ function Home() {
                 className=" h-8 w-16 p-2 text-center"
                 />
                 <Button value={adultsCount+1} name='adults' onClick={(e)=>{
-                  setAdultsCount(adultsCount + 1)
+                  setAdultsCount(adultsCount + 1),
                   handleInput(e)
 
                 }}  className=' rounded-full bg-transparent border'>+</Button>
