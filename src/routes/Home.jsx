@@ -456,6 +456,11 @@ function Home() {
           </div>
         </form>
         <hr className="border mt-6 " />
+        <div className="w-full h-32 flex justify-center items-center">
+  <p className="text-sm text-gray-500">
+            Ads Spaces 
+          </p>
+        </div>
       </div>
     </>
   );
