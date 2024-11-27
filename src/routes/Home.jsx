@@ -8,6 +8,7 @@ import Loader from "../assets/loaders/airplane.gif";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { CheckBox } from "@/components/ui/checkbox";
 import {
   Popover,
   PopoverContent,
